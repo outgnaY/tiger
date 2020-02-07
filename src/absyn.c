@@ -6,6 +6,7 @@
 #include "util.h"
 #include "symbol.h" /* symbol table data structures */
 #include "absyn.h"  /* abstract syntax data structures */
+#include <stdlib.h>
 
 A_var A_SimpleVar(A_pos pos, S_symbol sym)
 {A_var p = checked_malloc(sizeof(*p));
@@ -195,7 +196,8 @@ A_dec A_TypeDec(A_pos pos, A_nametyList type)
 }
 
 A_ty A_NameTy(A_pos pos, S_symbol name)
-{A_ty p = checked_malloc(sizeof(*p));
+{
+ A_ty p = checked_malloc(sizeof(*p));
  p->kind=A_nameTy;
  p->pos=pos;
  p->u.name=name;

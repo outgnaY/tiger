@@ -576,7 +576,7 @@ static const char *const yytname[] =
   "FOR", "TO", "DO", "LET", "IN", "END", "OF", "BREAK", "NIL", "FUNCTION",
   "VAR", "TYPE", "LOW", "UMINUS", "$accept", "program", "exp", "exprlist",
   "exprseq", "lvalue", "fieldlist", "declist", "dec", "typedeclist",
-  "typedec", "type", "typefields", "typefield", "vardec", "funcdeclist",
+  "typedec", "typ", "typefields", "typefield", "vardec", "funcdeclist",
   "funcdec", "id", YY_NULLPTR
 };
 #endif
@@ -1634,7 +1634,7 @@ yyreduce:
 
   case 29:
 #line 116 "tiger.grm" /* yacc.c:1646  */
-    {(yyval.exp) = A_IfExp(EM_tokPos, (yyvsp[-2].exp), (yyvsp[0].exp), A_NilExp(EM_tokPos));}
+    {(yyval.exp) = A_IfExp(EM_tokPos, (yyvsp[-2].exp), (yyvsp[0].exp), NULL);}
 #line 1639 "y.tab.c" /* yacc.c:1646  */
     break;
 

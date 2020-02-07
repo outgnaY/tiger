@@ -61,12 +61,12 @@ Grammar
    49 typedeclist: typedec
    50            | typedec typedeclist
 
-   51 typedec: TYPE id EQ type
+   51 typedec: TYPE id EQ typ
 
-   52 type: id
-   53     | LBRACE typefields RBRACE
-   54     | LBRACE RBRACE
-   55     | ARRAY OF id
+   52 typ: id
+   53    | LBRACE typefields RBRACE
+   54    | LBRACE RBRACE
+   55    | ARRAY OF id
 
    56 typefields: typefield
    57           | typefield COMMA typefields
@@ -165,7 +165,7 @@ typedeclist (57)
     on left: 49 50, on right: 46 50
 typedec (58)
     on left: 51, on right: 49 50
-type (59)
+typ (59)
     on left: 52 53 54 55, on right: 51
 typefields (60)
     on left: 56 57, on right: 53 57 63 65
@@ -585,7 +585,7 @@ State 24
 
 State 25
 
-   51 typedec: TYPE . id EQ type
+   51 typedec: TYPE . id EQ typ
 
     ID  shift, and go to state 1
 
@@ -1149,7 +1149,7 @@ State 58
 
 State 59
 
-   51 typedec: TYPE id . EQ type
+   51 typedec: TYPE id . EQ typ
 
     EQ  shift, and go to state 93
 
@@ -1851,14 +1851,14 @@ State 92
 
 State 93
 
-   51 typedec: TYPE id EQ . type
+   51 typedec: TYPE id EQ . typ
 
     ID      shift, and go to state 1
     LBRACE  shift, and go to state 110
     ARRAY   shift, and go to state 111
 
-    type  go to state 112
-    id    go to state 113
+    typ  go to state 112
+    id   go to state 113
 
 
 State 94
@@ -2067,8 +2067,8 @@ State 109
 
 State 110
 
-   53 type: LBRACE . typefields RBRACE
-   54     | LBRACE . RBRACE
+   53 typ: LBRACE . typefields RBRACE
+   54    | LBRACE . RBRACE
 
     ID      shift, and go to state 1
     RBRACE  shift, and go to state 126
@@ -2080,23 +2080,23 @@ State 110
 
 State 111
 
-   55 type: ARRAY . OF id
+   55 typ: ARRAY . OF id
 
     OF  shift, and go to state 128
 
 
 State 112
 
-   51 typedec: TYPE id EQ type .
+   51 typedec: TYPE id EQ typ .
 
     $default  reduce using rule 51 (typedec)
 
 
 State 113
 
-   52 type: id .
+   52 typ: id .
 
-    $default  reduce using rule 52 (type)
+    $default  reduce using rule 52 (typ)
 
 
 State 114
@@ -2313,21 +2313,21 @@ State 125
 
 State 126
 
-   54 type: LBRACE RBRACE .
+   54 typ: LBRACE RBRACE .
 
-    $default  reduce using rule 54 (type)
+    $default  reduce using rule 54 (typ)
 
 
 State 127
 
-   53 type: LBRACE typefields . RBRACE
+   53 typ: LBRACE typefields . RBRACE
 
     RBRACE  shift, and go to state 139
 
 
 State 128
 
-   55 type: ARRAY OF . id
+   55 typ: ARRAY OF . id
 
     ID  shift, and go to state 1
 
@@ -2514,16 +2514,16 @@ State 138
 
 State 139
 
-   53 type: LBRACE typefields RBRACE .
+   53 typ: LBRACE typefields RBRACE .
 
-    $default  reduce using rule 53 (type)
+    $default  reduce using rule 53 (typ)
 
 
 State 140
 
-   55 type: ARRAY OF id .
+   55 typ: ARRAY OF id .
 
-    $default  reduce using rule 55 (type)
+    $default  reduce using rule 55 (typ)
 
 
 State 141

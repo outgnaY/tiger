@@ -1,14 +1,9 @@
-/*
- * parsetest.c - Parse test source file.
- */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include "util.h"
-#include "symbol.h"
+#include "semant.h"
 #include "absyn.h"
+#include "util.h"
 #include "errormsg.h"
-#include "prabsyn.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 extern int yyparse(void);
 extern A_exp absyn_root;
@@ -21,15 +16,15 @@ A_exp parse(string fname)
     else
         return NULL;    
 }
+
 int main(int argc, char **argv)
 {
-	if (argc != 2) {
-		fprintf(stderr, "usage: absyntest filename\n");
+    if (argc != 2) {
+		fprintf(stderr, "usage: semanttest filename\n");
 		exit(1);
 	}
 	if (parse(argv[1])) {
-		pr_exp(stdout, absyn_root, 0);
-		printf("\n");
+		SEM_transProg(absyn_root);
 	}
-	return 0;
+    return 0;
 }

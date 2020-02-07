@@ -32,7 +32,11 @@ S_symbol S_Symbol(string name)
 {int index= hash(name) % SIZE;
  S_symbol syms = hashtable[index], sym;
  for(sym=syms; sym; sym=sym->next)
-   if (streq(sym->name,name)) return sym;
+   if (streq(sym->name,name)) {
+     /* printf("symbol %s\n", name); */
+     return sym;
+   }
+   
  sym = mksymbol(name,syms);
  hashtable[index]=sym;
  return sym;
@@ -48,12 +52,21 @@ S_table S_empty(void)
  return TAB_empty();
 }
 
+void S_free(S_table t)
+{
+  TAB_free(t);
+}
+
 void S_enter(S_table t, S_symbol sym, void *value) {
   TAB_enter(t,sym,value);
 }
 
 void *S_look(S_table t, S_symbol sym) {
   return TAB_look(t,sym);
+}
+
+int S_contain(S_table t, S_symbol sym) {
+  return TAB_contain(t, sym);
 }
 
 static struct S_symbol_ marksym = {"<mark>",0};

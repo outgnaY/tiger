@@ -4,6 +4,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "util.h"
 #include "table.h"
 
@@ -43,21 +44,56 @@ TAB_table TAB_empty(void)
  */
 
 void TAB_enter(TAB_table t, void *key, void *value)
-{int index;
- assert(t && key);
- index = ((unsigned)key) % TABSIZE;
- t->table[index] = Binder(key, value,t->table[index], t->top);
- t->top = key;
+{
+  int index;
+  assert(t && key);
+  index = ((unsigned)key) % TABSIZE;
+  t->table[index] = Binder(key, value,t->table[index], t->top);
+  t->top = key;
+}
+
+/* free a table */
+void TAB_free(TAB_table t)
+{
+  int i;
+  binder pcur, pnext;
+  for(i = 0; i < TABSIZE; i++) {
+    pcur = t->table[i];
+    if(!pcur) 
+      continue;
+    pnext = pcur->next;
+    for(; pcur; ) {
+      free(pcur);
+      pcur = pnext;
+      if(pnext)
+        pnext = pnext->next;
+      else
+        continue;      
+    }    
+  }
+  free(t);
 }
 
 void *TAB_look(TAB_table t, void *key)
-{int index;
- binder b;
- assert(t && key);
- index=((unsigned)key) % TABSIZE;
- for(b=t->table[index]; b; b=b->next)
-   if (b->key==key) return b->value;
- return NULL;
+{
+  int index;
+  binder b;
+  assert(t && key);
+  index=((unsigned)key) % TABSIZE;
+  for(b=t->table[index]; b; b=b->next)
+    if (b->key==key) return b->value;
+  return NULL;
+}
+
+int TAB_contain(TAB_table t, void *key)
+{
+  int index;
+  binder b;
+  assert(t && key);
+  index=((unsigned)key) % TABSIZE;
+  for(b=t->table[index]; b; b=b->next)
+    if (b->key==key) return TRUE;
+  return FALSE;
 }
 
 void *TAB_pop(TAB_table t) {

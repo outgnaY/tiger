@@ -3,6 +3,11 @@
  *
  */
 
+#ifndef SYMBOL_H
+#define SYMBOL_H
+
+#include "util.h"
+#include "table.h"
 typedef struct S_symbol_ *S_symbol;
 
 /* Make a unique symbol from a given string.  
@@ -20,6 +25,8 @@ typedef struct TAB_table_ *S_table;
 /* Make a new table */
 S_table S_empty(void);
 
+void S_free(S_table t);
+
 /* Enter a binding "sym->value" into "t", shadowing but not deleting
  *    any previous binding of "sym". */
 void S_enter(S_table t, S_symbol sym, void *value);
@@ -28,6 +35,8 @@ void S_enter(S_table t, S_symbol sym, void *value);
  *    if sym is unbound. */
 void *S_look(S_table t, S_symbol sym);
 
+int S_contain(S_table t, S_symbol sym);
+
 /* Start a new "scope" in "t".  Scopes are nested. */
 void S_beginScope(S_table t);
 
@@ -35,3 +44,4 @@ void S_beginScope(S_table t);
    and end the current scope. */
 void S_endScope(S_table t);
 
+#endif /* SYMBOL_H */

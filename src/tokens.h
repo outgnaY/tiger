@@ -1,3 +1,6 @@
+#ifndef TOKENS_H
+#define TOKENS_H
+
 typedef union  {
 	int pos;
 	int ival;
@@ -49,3 +52,4 @@ extern YYSTYPE yylval;
 # define VAR 299
 # define TYPE 300
 
+#endif /* TOKENS_H */

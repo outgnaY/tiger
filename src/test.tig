@@ -1,1 +1,11 @@
-(a[5][5]:=6)
+/* valid nil initialization and assignment */
+let 
+
+	type rectype = {name:string, id:a}
+	var b:rectype := nil
+
+in
+
+	b := nil
+
+end

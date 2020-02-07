@@ -7,10 +7,15 @@
  *  well-typed arguments and call the TAB_ functions.
  */
 
+#ifndef TABLE_H
+#define TABLE_H
+
 typedef struct TAB_table_ *TAB_table;
 
 /* Make a new table mapping "keys" to "values". */
 TAB_table TAB_empty(void);
+
+void TAB_free(TAB_table t);
 
 /* Enter the mapping "key"->"value" into table "t", 
  *    shadowing but not destroying any previous binding for "key". */
@@ -18,6 +23,8 @@ void TAB_enter(TAB_table t, void *key, void *value);
 
 /* Look up the most recent binding for "key" in table "t" */
 void *TAB_look(TAB_table t, void *key);
+
+int TAB_contain(TAB_table t, void *key);
 
 /* Pop the most recent binding and return its key.
  * This may expose another binding for the same key, if there was one. */
@@ -29,4 +36,4 @@ void *TAB_pop(TAB_table t);
  *  recent binding of any key to the oldest binding in the table */
 void TAB_dump(TAB_table t, void (*show)(void *key, void *value));
 
-
+#endif /* TABLE_H */
