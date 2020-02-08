@@ -124,3 +124,11 @@ int isLoop(Ty_ty ty)
   }
 }
 
+/*
+char *Ty_Str(Ty_ty t) {
+  if(t->kind == Ty_name) {
+    return S_name(t->u.name.sym);
+  }
+  return str_ty[t->kind];
+}
+*/

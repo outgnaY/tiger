@@ -44,4 +44,10 @@ void S_beginScope(S_table t);
    and end the current scope. */
 void S_endScope(S_table t);
 
+void S_show(S_table t, void (*show)(S_symbol sym, void *binding));
+
+void S_dump(S_table t, void (*show)(S_symbol sym, void *binding));
+
+int S_ismark(S_symbol sym);
+
 #endif /* SYMBOL_H */

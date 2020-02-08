@@ -5,11 +5,43 @@
 #include "stack.h"
 #include "temp.h"
 #include <stdlib.h>
-#include "prabsyn.h"
+#define DEBUG 0 /* debug log */
 
 static Ty_fieldList makeTyFieldList(S_table tenv, A_fieldList fieldList);
 Stack s = NULL;
 S_table funcenv = NULL;
+
+void showTy(S_symbol sym, Ty_ty type) {
+    if(S_ismark(sym)) {
+        printf("marksym\n");
+    }
+    else {
+        printf("type: ");
+        Ty_print(type);
+        printf("\n");
+    }    
+}
+void showSym(S_symbol sym, E_enventry entry) {
+    if(S_ismark(sym)) {
+        printf("marksym\n");
+    }
+    else {
+        if(entry->kind == E_funEntry) {
+            printf("function: %s", S_name(sym));
+            printf("      formals: ");
+            TyList_print(entry->u.fun.formals);
+            printf("      result: ");
+            Ty_print(entry->u.fun.result);
+            printf("\n");
+        }
+        else if(entry->kind == E_varEntry) {
+            printf("var: %s", S_name(sym));
+            printf("      type: ");
+            Ty_print(entry->u.var.ty);
+            printf("      isloop: %d\n", entry->u.var.isloopvar);        
+        }
+    }    
+}
 
 void SEM_transProg(A_exp exp)
 {
@@ -222,6 +254,10 @@ struct expty transExp(S_table venv, S_table tenv, A_exp a)
             S_beginScope(venv);
             /* put loop var entry into env */
             S_enter(venv, a->u.forr.var, E_VarEntry(Ty_Int(), TRUE));
+            #if DEBUG
+            printf("after put loop var\n");
+            S_show(venv, showSym);
+            #endif
             Stack_push(s, Temp_newlabel());
             struct expty body = transExp(venv, tenv, a->u.forr.body);
             if(body.ty->kind != Ty_void) {
@@ -229,6 +265,10 @@ struct expty transExp(S_table venv, S_table tenv, A_exp a)
             }
             Stack_pop(s);
             S_endScope(venv);
+            #if DEBUG
+            printf("exit for body\n");
+            S_show(venv, showSym);
+            #endif
             return expTy(NULL, Ty_Void());
         }
         case A_arrayExp: {
@@ -298,6 +338,12 @@ struct expty transExp(S_table venv, S_table tenv, A_exp a)
             e = transExp(venv, tenv, a->u.let.body);
             S_endScope(tenv);
             S_endScope(venv);
+            #if DEBUG
+            printf("exit let expression, tenv: \n");
+            S_show(tenv, showTy);
+            printf("exit let expression, venv: \n");
+            S_show(venv, showSym);
+            #endif
             return expTy(NULL, e.ty);
         }
         case A_callExp: {
@@ -461,12 +507,20 @@ void transDec(S_table venv, S_table tenv, A_dec d) {
                     EM_error(d->pos, "type mismatch for var initialzation");
                 }
                 S_enter(venv, d->u.var.var, E_VarEntry(actual(type), FALSE));
+                #if DEBUG
+                printf("put var into table, with type\n");
+                S_show(venv, showSym);
+                #endif
             }
             else {
                 if(init.ty->kind == Ty_nil) {
                     EM_error(d->u.var.init->pos, "cannot initialize with nil");
                 }
                 S_enter(venv, d->u.var.var, E_VarEntry(init.ty, FALSE));
+                #if DEBUG
+                printf("put var into table, without type\n");
+                S_show(venv, showSym);
+                #endif
             }            
            break;            
         }
@@ -483,6 +537,10 @@ void transDec(S_table venv, S_table tenv, A_dec d) {
                 }    
                 S_enter(temp, nameTyList->head->name, NULL);
                 S_enter(tenv, nameTyList->head->name, Ty_Name(nameTyList->head->name, NULL));
+                #if DEBUG
+                printf("put new type into table\n");
+                S_show(tenv, showTy);
+                #endif
             }
             /* free memory */
             S_free(temp);  
@@ -532,6 +590,10 @@ void transDec(S_table venv, S_table tenv, A_dec d) {
 
                 S_enter(temp, funDecList->head->name, NULL);
                 S_enter(venv, funDecList->head->name, E_FunEntry(formalTyList, resultTy));
+                #if DEBUG
+                printf("after put function into table\n");
+                S_show(venv, showSym);
+                #endif
             }
             /* free memory */
             S_free(temp);
@@ -546,12 +608,19 @@ void transDec(S_table venv, S_table tenv, A_dec d) {
                 for(; params && formalTyList; params = params->tail, formalTyList = formalTyList->tail) {
                     S_enter(venv, params->head->name, E_VarEntry(formalTyList->head, FALSE));
                 }
+                #if DEBUG
+                printf("after put formal list of function\n");
+                S_show(venv, showSym);
+                #endif
                 struct expty e = transExp(venv, tenv, funDecList->head->body);
                 if(!(checkAssignType(resultTy, e.ty) || (resultTy->kind == Ty_void && e.ty->kind == Ty_void))) {
-                    printf("%d***%d\n", resultTy->kind, e.ty->kind);
                     EM_error(funDecList->head->body->pos, "return type mismatch");
                 }
                 S_endScope(venv);
+                #if DEBUG
+                printf("exit function dec\n");
+                S_show(venv, showSym);
+                #endif
             }
             break;
         }   

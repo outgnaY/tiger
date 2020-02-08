@@ -71,6 +71,10 @@ int S_contain(S_table t, S_symbol sym) {
 
 static struct S_symbol_ marksym = {"<mark>",0};
 
+int S_ismark(S_symbol sym) {
+  return sym == &marksym;
+}
+
 void S_beginScope(S_table t)
 { S_enter(t,&marksym,NULL);
 }
@@ -84,4 +88,9 @@ void S_endScope(S_table t)
 void S_dump(S_table t, void (*show)(S_symbol sym, void *binding)) {
   TAB_dump(t, (void (*)(void *, void *)) show);
 }
+
+void S_show(S_table t, void (*show)(S_symbol sym, void *binding)) {
+  TAB_show(t, (void (*)(void *, void *)) show);
+}
+
 

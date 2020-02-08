@@ -115,10 +115,17 @@ void TAB_dump(TAB_table t, void (*show)(void *key, void *value)) {
   binder b = t->table[index];
   if (b==NULL) return;
   t->table[index]=b->next;
-  t->top=b->prevtop;
-  show(b->key,b->value);
+  t->top=b->prevtop;  
   TAB_dump(t,show);
+  show(b->key,b->value);
   assert(t->top == b->prevtop && t->table[index]==b->next);
   t->top=k;
   t->table[index]=b;
+}
+
+void TAB_show(TAB_table t, void (*show)(void *key, void *value)) {
+  printf("*********start**********\n");
+  TAB_dump(t, show);
+  printf("**********end**********\n");
+  printf("\n");
 }
